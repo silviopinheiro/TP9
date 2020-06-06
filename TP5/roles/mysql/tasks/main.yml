@@ -1,0 +1,27 @@
+---
+# tasks file for mysql
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  become: yes
+
+- name: Install required software
+  apt: name={{ item }} state=present
+  become: yes
+  with_items:
+    - mariadb-server
+    - python3
+    - python-mysqldb
+
+- name: Create mysql database
+  mysql_db: name={{ scrm_mysql_db }} state=present
+  become: yes
+
+- name: Create mysql user
+  mysql_user:
+    name={{ scrm_mysql_user }}
+    host=10.0.10.200
+    password={{ scrm_mysql_password }}
+    priv=*.*:ALL
+
+  become: yes
+

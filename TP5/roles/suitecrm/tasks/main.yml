@@ -1,0 +1,25 @@
+---
+# tasks file for suitecrm
+- name: Download SuiteCRM
+  get_url:
+    url=http://10.0.10.1/SuiteCRM-7.11.13.zip
+    dest=/tmp/SuiteCRM-7.11.13.zip
+    validate_certs=no
+
+
+- name: Extract SuiteCRM
+  unarchive: src=/tmp/SuiteCRM-7.11.13.zip dest=/var/www/html copy=no
+  become: yes
+
+- name: Change the dir
+  command:  mv /var/www/html/SuiteCRM-7.11.13 /var/www/html/suitecrm
+  become: yes
+
+- name: Change the permission
+  command:  chown -R www-data:www-data /var/www/html/suitecrm
+  become: yes
+
+- name: Change the permission
+  command:  sudo chmod -R 755 /var/www/html/suitecrm
+  become: yes
+

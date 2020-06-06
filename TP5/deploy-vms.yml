@@ -1,0 +1,73 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "10.0.10.100"
+    vcenter_user: "administrator@vsphere.local"
+    vcenter_pass: "VMware1!"
+    datacenter_name: "VXLAB"
+    cluster_name: "CL1"
+  tasks:
+  - name: Create suitecrm-db
+    vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+      name: suitecrm-db
+      template: ubuntu_tmp
+      datacenter: "{{ datacenter_name }}"
+      folder: /tp5
+      cluster: "{{ cluster_name }}"
+      datastore: "SYNO_02"
+      networks:
+      - name: DPG_MNGT_VLAN_10
+        ip: 10.0.10.200
+        netmask: 255.255.255.0
+        gateway: 10.0.10.254
+        type: static
+        dns_servers: 10.0.10.1
+      customization:
+        hostname: "suitecrm-db"
+        dns_servers:
+        - 10.0.10.1
+      state: poweredon
+      wait_for_ip_address: yes
+    delegate_to: localhost
+
+- hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_server: "10.0.10.100"
+    vcenter_user: "administrator@vsphere.local"
+    vcenter_pass: "VMware1!"
+    datacenter_name: "VXLAB"
+    cluster_name: "CL1"
+  tasks:
+  - name: Create suitecrm-web
+    vmware_guest:
+      hostname: "{{ vcenter_server }}"
+      username: "{{ vcenter_user }}"
+      password: "{{ vcenter_pass }}"
+      validate_certs: False
+      name: suitecrm-web
+      template: ubuntu_tmp
+      datacenter: "{{ datacenter_name }}"
+      folder: /tp5
+      cluster: "{{ cluster_name }}"
+      datastore: "SYNO_01"
+      networks:
+      - name: DPG_MNGT_VLAN_10
+        ip: 10.0.10.201
+        netmask: 255.255.255.0
+        gateway: 10.0.10.254
+        type: static
+        dns_servers: 10.0.10.1
+      customization:
+        hostname: "suitecrm-web"
+        dns_servers:
+        - 10.0.10.1
+      state: poweredon
+      wait_for_ip_address: yes
+    delegate_to: localhost
+

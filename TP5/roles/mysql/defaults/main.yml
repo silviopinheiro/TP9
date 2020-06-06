@@ -1,0 +1,5 @@
+---
+# defaults file for mysql
+scrm_mysql_db: suitecrm
+scrm_mysql_user: bluestack
+scrm_mysql_password: bluestack
